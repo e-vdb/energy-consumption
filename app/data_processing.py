@@ -11,7 +11,12 @@ gas_meter = {
     'record': []
 }
 
-df = pd.DataFrame(gas_meter)
+water_meter = {
+    'date': [],
+    'record': []
+}
 
-df.to_csv('data_gas.csv', index=False)
+df = pd.DataFrame(water_meter)
+
+df.to_csv('data_water.csv', index=False)
 

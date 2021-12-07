@@ -6,7 +6,12 @@ electric_meter = {
     'night_record': []
 }
 
-df = pd.DataFrame(electric_meter)
+gas_meter = {
+    'date':  [],
+    'record': []
+}
 
-df.to_csv('data.csv', index=False)
+df = pd.DataFrame(gas_meter)
+
+df.to_csv('data_gas.csv', index=False)
 

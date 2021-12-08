@@ -1,4 +1,5 @@
 import pandas as pd
+import datetime
 
 class Dataset():
 
@@ -6,7 +7,7 @@ class Dataset():
         self.filepath = filepath
 
     def load(self):
-        self.df = pd.read_csv(self.filepath)
+        self.df = pd.read_csv(self.filepath, date_parser=pd.to_datetime)
 
     def fill(self, df2):
         self.df = self.df.append(df2, ignore_index=True)
@@ -15,7 +16,7 @@ class Dataset():
         self.df.to_csv(self.filepath, index=False)
 
     def sort_by_date(self):
-        self.df.sort_values(by='date')
+        self.df.sort_values(by='date', inplace=True)
 
     def add(self, df2):
         self.fill(df2)

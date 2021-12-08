@@ -62,10 +62,10 @@ with form_visual:
     submit_see = st.form_submit_button(label="Print")
 
 if submit_see:
-    elec.consumption('day_consumption', 'day_record (kWh)')
-    elec.consumption('night_consumption', 'night_record (kWh)')
-    gas.consumption('consumption', 'record (m3)')
-    water.consumption('consumption', 'record (m3)')
+    elec.consumption('day_consumption  (kWh)', 'day_record')
+    elec.consumption('night_consumption (kWh)', 'night_record')
+    gas.consumption('consumption (m3)', 'record')
+    water.consumption('consumption (m3)', 'record')
     st.write(elec.df)
     st.write(gas.df)
     st.write(water.df)

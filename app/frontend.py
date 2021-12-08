@@ -1,6 +1,6 @@
 import streamlit as st
 from dataframe_processing import Dataset
-import datetime
+import pandas as pd
 st.set_page_config(layout="wide")
 
 elec = Dataset('data.csv')
@@ -20,7 +20,7 @@ form = st.form(key="my_form", clear_on_submit = True)
 with form:
     d = st.date_input(
         "Date",
-        datetime.date(2021, 12, 7))
+        value=pd.to_datetime("2021-12-01", format="%Y-%m-%d"))
     day_rec = st.number_input('Electricity index (day)')
     night_rec = st.number_input('Electricity index (night)')
     rec_gas = st.number_input('Gas index')
@@ -29,13 +29,13 @@ with form:
 
 if submit:
     df_elec = {'date': d, 'day_record': day_rec, 'night_record': night_rec}
-    elec.fill(df_elec)
+    elec.add(df_elec)
     df_gas = {'date': d, 'record': rec_gas}
-    gas.fill(df_gas)
+    gas.add(df_gas)
     df_water = {'date': d, 'record': rec_water}
-    water.fill(df_water)
-    for data in datasets:
-        data.save()
+    water.add(df_water)
+
+
 
 st.header('Plot consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)

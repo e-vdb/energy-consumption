@@ -14,5 +14,8 @@ class Dataset():
     def save(self):
         self.df.to_csv(self.filepath, index=False)
 
+    def sort_by_date(self):
+        self.df.sort_values(by='date')
+
     def consumption(self, new_col, col_index):
         self.df[new_col] = self.df[col_index].diff()

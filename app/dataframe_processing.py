@@ -11,6 +11,7 @@ class Dataset():
 
     def fill(self, df2):
         self.df = self.df.append(df2, ignore_index=True)
+        self.df['date'] = pd.to_datetime(self.df['date'])
 
     def save(self):
         self.df.to_csv(self.filepath, index=False)

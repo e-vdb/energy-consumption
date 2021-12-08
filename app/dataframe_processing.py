@@ -17,5 +17,10 @@ class Dataset():
     def sort_by_date(self):
         self.df.sort_values(by='date')
 
+    def add(self, df2):
+        self.fill(df2)
+        self.sort_by_date()
+        self.save()
+
     def consumption(self, new_col, col_index):
         self.df[new_col] = self.df[col_index].diff()

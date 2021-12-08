@@ -14,5 +14,5 @@ class Dataset():
     def save(self):
         self.df.to_csv(self.filepath, index=False)
 
-    def consumption(self):
-        pass
+    def consumption(self, new_col, col_index):
+        self.df[new_col] = self.df[col_index].diff()

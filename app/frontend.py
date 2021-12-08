@@ -4,7 +4,11 @@ import datetime
 st.set_page_config(layout="wide")
 
 elec = Dataset('data.csv')
-elec.load()
+gas = Dataset('data_gas.csv')
+water = Dataset('data_water.csv')
+datasets = [elec, gas, water]
+for data in datasets:
+    data.load()
 
 # Set the app title
 st.title("Energy consumption")
@@ -12,10 +16,7 @@ st.write(
     "Save and visualise your energy consumption"
 )
 st.write('Electricity')
-
-
 form = st.form(key="my_form", clear_on_submit = True)
-
 with form:
     d = st.date_input(
         "Date",
@@ -28,6 +29,18 @@ if submit:
     elec.fill(df2)
     elec.save()
 
+form_gas = st.form(key="my_form_gas", clear_on_submit = True)
+with form_gas:
+    d = st.date_input(
+        "Date",
+        datetime.date(2021, 12, 7))
+    rec_gas = st.number_input('record')
+    submit_gas = st.form_submit_button(label="Add")
+if submit_gas:
+    df2 = {'date': d, 'record': rec_gas}
+    gas.fill(df2)
+    gas.save()
+
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)
 
 with form_visual:
@@ -35,3 +48,4 @@ with form_visual:
 
 if submit_see:
     st.write(elec.df)
+    st.write(gas.df)

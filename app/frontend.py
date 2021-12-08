@@ -30,13 +30,12 @@ with form:
 if submit:
     df_elec = {'date': d, 'day_record': day_rec, 'night_record': night_rec}
     elec.fill(df_elec)
-    elec.save()
     df_gas = {'date': d, 'record': rec_gas}
     gas.fill(df_gas)
-    gas.save()
     df_water = {'date': d, 'record': rec_water}
     water.fill(df_water)
-    water.save()
+    for data in datasets:
+        data.save()
 
 st.header('Plot consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)

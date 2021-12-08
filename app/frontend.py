@@ -15,7 +15,7 @@ st.title("Energy consumption")
 st.write(
     "Save and visualise your energy consumption"
 )
-st.write('Fill your index')
+st.header('Fill your index')
 form = st.form(key="my_form", clear_on_submit = True)
 with form:
     d = st.date_input(
@@ -38,16 +38,19 @@ if submit:
     water.fill(df_water)
     water.save()
 
-st.write('Show index')
+st.header('Plot consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)
 with form_visual:
     submit_see = st.form_submit_button(label="Print")
 
 if submit_see:
-    elec.consumption('day_consumption  (kWh)', 'day_record')
+    elec.consumption('day_consumption (kWh)', 'day_record')
     elec.consumption('night_consumption (kWh)', 'night_record')
     gas.consumption('consumption (m3)', 'record')
     water.consumption('consumption (m3)', 'record')
-    st.write(elec.df)
-    st.write(gas.df)
-    st.write(water.df)
+    st.subheader('Electricity')
+    st.bar_chart(elec.df[['day_consumption (kWh)', 'night_consumption (kWh)']])
+    st.subheader('Gas')
+    st.bar_chart(gas.df['consumption (m3)'])
+    st.subheader('Water')
+    st.bar_chart(water.df['consumption (m3)'])

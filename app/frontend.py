@@ -62,6 +62,7 @@ with form_visual:
     submit_see = st.form_submit_button(label="Print")
 
 if submit_see:
+    elec.consumption('day_consumption', 'day_record')
     st.write(elec.df)
     st.write(gas.df)
     st.write(water.df)

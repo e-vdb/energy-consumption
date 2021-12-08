@@ -29,6 +29,7 @@ if submit:
     elec.fill(df2)
     elec.save()
 
+st.write('Gas')
 form_gas = st.form(key="my_form_gas", clear_on_submit = True)
 with form_gas:
     d = st.date_input(

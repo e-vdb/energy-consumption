@@ -29,3 +29,7 @@ class Dataset():
 
     def set_index_date(self):
         self.df.set_index('date', inplace=True)
+
+    def filter_year(self, year):
+        filt = (self.df['date'] >= year + '-01-01') & (self.df['date'] <= year + '-12-31')
+        self.df = self.df.loc[filt]

@@ -26,3 +26,6 @@ class Dataset():
 
     def consumption(self, new_col, col_index):
         self.df[new_col] = self.df[col_index].diff()
+
+    def set_index_date(self):
+        self.df.set_index('date', inplace=True)

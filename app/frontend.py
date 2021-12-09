@@ -47,6 +47,8 @@ if submit_see:
     elec.consumption('night_consumption (kWh)', 'night_record')
     gas.consumption('consumption (m3)', 'record')
     water.consumption('consumption (m3)', 'record')
+    for data in datasets:
+        data.set_index_date()
     st.subheader('Electricity')
     st.bar_chart(elec.df[['day_consumption (kWh)', 'night_consumption (kWh)']])
     st.subheader('Gas')

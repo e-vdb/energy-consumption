@@ -27,7 +27,6 @@ class Dataset():
     def consumption(self, new_col, col_index):
         self.df[new_col] = self.df[col_index].diff()
         self.df['consumption_month'] = self.df['date'].apply(lambda x: x - relativedelta(months=1)).dt.month_name()
-        #self.df.set_index('consumption_month', inplace=True)
 
     def set_index_date(self):
         self.df.set_index('date', inplace=True)

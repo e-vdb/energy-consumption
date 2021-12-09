@@ -3,7 +3,8 @@ from dataframe_processing import Dataset
 import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-import plotly.figure_factory as ff
+from graphic import setup_bar_chart
+
 
 st.set_page_config(layout="wide")
 list_years = [(datetime.today() + relativedelta(years=-i)).year for i in range(5)]
@@ -48,15 +49,20 @@ with form_visual:
         list_years)
 
 if submit_see:
-    elec.consumption('day_consumption (kWh)', 'day_record')
-    elec.consumption('night_consumption (kWh)', 'night_record')
-    gas.consumption('consumption (m3)', 'record')
-    water.consumption('consumption (m3)', 'record')
+    elec_col = ['day_consumption (kWh)', 'night_consumption (kWh)']
+    col = ['consumption (m3)']
+    elec.consumption(elec_col[0], 'day_record')
+    elec.consumption(elec_col[1], 'night_record')
+    gas.consumption(col[0], 'record')
+    water.consumption(col[0], 'record')
     for data in datasets:
         data.filter_year(str(option))
     st.subheader('Electricity')
-    st.bar_chart(elec.df[['day_consumption (kWh)', 'night_consumption (kWh)']])
+    fig_elec = setup_bar_chart(elec.df, 'consumption_month', elec_col)
+    fig_gas = setup_bar_chart(gas.df, 'consumption_month', col)
+    fig_water = setup_bar_chart(water.df, 'consumption_month', col)
+    st.plotly_chart(fig_elec, use_container_width=True)
     st.subheader('Gas')
-    st.bar_chart(gas.df['consumption (m3)'])
+    st.plotly_chart(fig_gas, use_container_width=True)
     st.subheader('Water')
-    st.bar_chart(water.df['consumption (m3)'])
+    st.plotly_chart(fig_water, use_container_width=True)

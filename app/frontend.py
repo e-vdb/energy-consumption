@@ -43,7 +43,7 @@ with form_visual:
     submit_see = st.form_submit_button(label="Print")
     option = st.selectbox(
         'Year',
-        ['2020', '2021'])
+        ['2019','2020', '2021'])
 
 if submit_see:
     for data in datasets:

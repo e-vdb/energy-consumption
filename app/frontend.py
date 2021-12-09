@@ -1,6 +1,8 @@
 import streamlit as st
 from dataframe_processing import Dataset
 import pandas as pd
+import plotly.figure_factory as ff
+
 st.set_page_config(layout="wide")
 
 elec = Dataset('data_electric.csv')
@@ -35,8 +37,6 @@ if submit:
     df_water = {'date': d, 'record': rec_water}
     water.add(df_water)
 
-
-
 st.header('Plot consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)
 with form_visual:
@@ -46,15 +46,16 @@ with form_visual:
         ['2019','2020', '2021'])
 
 if submit_see:
-    for data in datasets:
-        data.filter_year(option)
     elec.consumption('day_consumption (kWh)', 'day_record')
     elec.consumption('night_consumption (kWh)', 'night_record')
     gas.consumption('consumption (m3)', 'record')
     water.consumption('consumption (m3)', 'record')
+    for data in datasets:
+        data.filter_year(option)
     st.subheader('Electricity')
     st.bar_chart(elec.df[['day_consumption (kWh)', 'night_consumption (kWh)']])
     st.subheader('Gas')
     st.bar_chart(gas.df['consumption (m3)'])
     st.subheader('Water')
     st.bar_chart(water.df['consumption (m3)'])
+    st.write(elec.df)

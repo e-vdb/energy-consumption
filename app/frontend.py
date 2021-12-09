@@ -1,10 +1,12 @@
 import streamlit as st
 from dataframe_processing import Dataset
 import pandas as pd
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import plotly.figure_factory as ff
 
 st.set_page_config(layout="wide")
-
+list_years = [(datetime.today() + relativedelta(years=-i)).year for i in range(5)]
 elec = Dataset('data_electric.csv')
 gas = Dataset('data_gas.csv')
 water = Dataset('data_water.csv')
@@ -43,7 +45,7 @@ with form_visual:
     submit_see = st.form_submit_button(label="Print")
     option = st.selectbox(
         'Year',
-        ['2019','2020', '2021'])
+        list_years)
 
 if submit_see:
     elec.consumption('day_consumption (kWh)', 'day_record')
@@ -51,11 +53,10 @@ if submit_see:
     gas.consumption('consumption (m3)', 'record')
     water.consumption('consumption (m3)', 'record')
     for data in datasets:
-        data.filter_year(option)
+        data.filter_year(str(option))
     st.subheader('Electricity')
     st.bar_chart(elec.df[['day_consumption (kWh)', 'night_consumption (kWh)']])
     st.subheader('Gas')
     st.bar_chart(gas.df['consumption (m3)'])
     st.subheader('Water')
     st.bar_chart(water.df['consumption (m3)'])
-    st.write(elec.df)

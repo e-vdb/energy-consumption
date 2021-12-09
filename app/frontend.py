@@ -3,7 +3,7 @@ from dataframe_processing import Dataset
 import pandas as pd
 st.set_page_config(layout="wide")
 
-elec = Dataset('data.csv')
+elec = Dataset('data_electric.csv')
 gas = Dataset('data_gas.csv')
 water = Dataset('data_water.csv')
 datasets = [elec, gas, water]

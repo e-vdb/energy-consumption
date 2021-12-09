@@ -7,7 +7,7 @@ class Dataset():
         self.filepath = filepath
 
     def load(self):
-        self.df = pd.read_csv(self.filepath, date_parser=pd.to_datetime)
+        self.df = pd.read_csv(self.filepath, parse_dates=['date'], date_parser=pd.to_datetime)
 
     def fill(self, df2):
         self.df = self.df.append(df2, ignore_index=True)
@@ -31,5 +31,5 @@ class Dataset():
         self.df.set_index('date', inplace=True)
 
     def filter_year(self, year):
-        filt = (self.df['date'] >= year + '-01-01') & (self.df['date'] <= year + '-12-31')
+        filt = (self.df['date'] >= year + '-01-01') & (self.df['date'] < str(int(year) + 1) + '-02-01')
         self.df = self.df.loc[filt]

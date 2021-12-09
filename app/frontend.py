@@ -41,8 +41,13 @@ st.header('Plot consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)
 with form_visual:
     submit_see = st.form_submit_button(label="Print")
+    option = st.selectbox(
+        'Year',
+        ['2020', '2021'])
 
 if submit_see:
+    for data in datasets:
+        data.filter_year(option)
     elec.consumption('day_consumption (kWh)', 'day_record')
     elec.consumption('night_consumption (kWh)', 'night_record')
     gas.consumption('consumption (m3)', 'record')

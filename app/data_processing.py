@@ -16,7 +16,10 @@ water_meter = {
     'record': []
 }
 
-df = pd.DataFrame(water_meter)
-
-df.to_csv('data_water.csv', index=False)
+dataset_names = ['electric', 'gas', 'water']
+dataset= [electric_meter, gas_meter, water_meter]
+for name, data in zip(dataset_names, dataset):
+    df = pd.DataFrame(data)
+    filename = 'data_' + name + '.csv'
+    df.to_csv(filename, index=False)
 

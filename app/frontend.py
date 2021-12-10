@@ -44,12 +44,12 @@ with form_visual:
 
 if submit_see:
     dataCointe.evaluate_consumption()
-    cols = list(dataCointe.df.columns)
+    saved_cols = list(dataCointe.saved_columns)[1:]
+    cols = dataCointe.consumption_columns[1:]
     dataCointe.filter_year(str(option))
-    fig_elec = setup_bar_chart(dataCointe.df, 'consumption_month', [cols[6],cols[7]], 'Electricity ' + str(option))
-    fig_gas = setup_bar_chart(dataCointe.df, 'consumption_month', [cols[8]], 'Gas '  + str(option))
-    fig_water = setup_bar_chart(dataCointe.df, 'consumption_month', [cols[9]], 'Water '  + str(option))
-    figures = (fig_elec, fig_gas, fig_water)
+    figures = (setup_bar_chart(dataCointe.df, 'consumption_month', [new_col], col + str(option))
+                for col, new_col in zip(saved_cols, cols))
     for fig in figures:
         st.plotly_chart(fig, use_container_width=True)
+
 

@@ -45,16 +45,15 @@ with form_visual:
 if submit_see:
     elec_col = ['day_consumption (kWh)', 'night_consumption (kWh)']
     col = ['consumption (m3)']
-    elec.consumption(elec_col[0], 'day_record')
-    elec.consumption(elec_col[1], 'night_record')
-    gas.consumption(col[0], 'record')
-    water.consumption(col[0], 'record')
-    for data in datasets:
-        data.filter_year(str(option))
+    dataCointe.consumption(elec_col[0], cols[1])
+    dataCointe.consumption(elec_col[1],  cols[2])
+    dataCointe.consumption(col[0],  cols[3])
+    dataCointe.consumption(col[0],  cols[4])
+    dataCointe.filter_year(str(option))
     st.subheader('Electricity')
-    fig_elec = setup_bar_chart(elec.df, 'consumption_month', elec_col)
-    fig_gas = setup_bar_chart(gas.df, 'consumption_month', col)
-    fig_water = setup_bar_chart(water.df, 'consumption_month', col)
+    fig_elec = setup_bar_chart(dataCointe.df, 'consumption_month', elec_col)
+    fig_gas = setup_bar_chart(dataCointe.df, 'consumption_month', col)
+    fig_water = setup_bar_chart(dataCointe.df, 'consumption_month', col)
     st.plotly_chart(fig_elec, use_container_width=True)
     st.subheader('Gas')
     st.plotly_chart(fig_gas, use_container_width=True)

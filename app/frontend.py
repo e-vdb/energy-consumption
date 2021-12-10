@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from graphic import setup_bar_chart
-from data_processing import find_csv_filenames
+from data_processing import find_csv_filenames, create_dataset
 
 
 st.set_page_config(layout="wide")
@@ -25,8 +25,35 @@ st.write(
     "Save and visualise your energy consumption"
 )
 
-st.expander('Create a new record')
-
+expander = st.expander('Create a new record')
+with expander:
+    form_create = st.form(key="my_form_create", clear_on_submit=True)
+    with form_create:
+        title = st.text_input('Enter location', 'location')
+        electricity = st.radio(
+            "Electricity",
+            ('Day', 'Bi', 'Night'))
+        gas = st.radio("Gas", ('Yes', 'No'))
+        water = st.radio("Water", ('Yes', 'No'))
+        cols = ['date']
+        if electricity == 'Bi':
+            cols.append('day_elec')
+            cols.append('night_elec')
+        else:
+            cols.append('elec')
+        if gas == 'Yes':
+            cols.append('gas')
+        if water == 'Yes':
+            cols.append('water')
+        submit_create = st.form_submit_button(label="Create")
+if submit_create:
+    filenames = find_csv_filenames("/home/emeline/PycharmProjects/energy-consumption")
+    filepath = 'data_' + title + '.csv'
+    if filepath in filenames:
+        st.write('This files already exists. Enter a new location.')
+    else:
+        create_dataset(cols, title)
+        st.write('Your file has been successfully created.')
 st.header('Fill your index')
 form = st.form(key="my_form", clear_on_submit = True)
 with form:

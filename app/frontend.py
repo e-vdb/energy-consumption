@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from graphic import setup_bar_chart
+from data_processing import find_csv_filenames
 
 
 st.set_page_config(layout="wide")
@@ -17,6 +18,7 @@ st.title("Energy consumption")
 st.write(
     "Save and visualise your energy consumption"
 )
+
 st.header('Fill your index')
 form = st.form(key="my_form", clear_on_submit = True)
 with form:
@@ -37,17 +39,23 @@ if submit:
 st.header('Plot consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)
 with form_visual:
-    submit_see = st.form_submit_button(label="Print")
+    filenames = find_csv_filenames("/home/emeline/PycharmProjects/energy-consumption")
+    file = st.selectbox(
+        'Files',
+        filenames)
+    submit_see = st.form_submit_button(label="Show consumption plots")
     option = st.selectbox(
         'Year',
         list_years)
 
 if submit_see:
-    dataCointe.evaluate_consumption()
-    saved_cols = list(dataCointe.saved_columns)[1:]
-    cols = dataCointe.consumption_columns[1:]
-    dataCointe.filter_year(str(option))
-    figures = (setup_bar_chart(dataCointe.df, 'consumption_month', [new_col], col + str(option))
+    dataset = Dataset(file)
+    dataset.load()
+    dataset.evaluate_consumption()
+    saved_cols = list(dataset.saved_columns)[1:]
+    cols = dataset.consumption_columns[1:]
+    dataset.filter_year(str(option))
+    figures = (setup_bar_chart(dataset.df, 'consumption_month', [new_col], col + str(option))
                 for col, new_col in zip(saved_cols, cols))
     for fig in figures:
         st.plotly_chart(fig, use_container_width=True)

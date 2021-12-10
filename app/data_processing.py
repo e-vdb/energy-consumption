@@ -1,25 +1,8 @@
 import pandas as pd
 
-electric_meter = {
-    'date': [],
-    'day_record': [],
-    'night_record': []
-}
-
-gas_meter = {
-    'date':  [],
-    'record': []
-}
-
-water_meter = {
-    'date': [],
-    'record': []
-}
-
-dataset_names = ['electric', 'gas', 'water']
-dataset= [electric_meter, gas_meter, water_meter]
-for name, data in zip(dataset_names, dataset):
-    df = pd.DataFrame(data)
-    filename = 'data_' + name + '.csv'
-    df.to_csv(filename, index=False)
+cols = ['date', 'day_elec', 'night_elec', 'gas', 'water']
+data = ([] for col in cols)
+dic = {col: val for col, val in zip(cols, data)}
+df = pd.DataFrame(dic)
+df.to_csv('data.csv', index=False)
 

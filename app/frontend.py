@@ -12,6 +12,12 @@ list_years = [(datetime.today() + relativedelta(years=-i)).year for i in range(5
 dataCointe = Dataset('data_Cointe.csv')
 dataCointe.load()
 
+def load_file():
+    filenames = find_csv_filenames("/home/emeline/PycharmProjects/energy-consumption")
+    file = st.selectbox(
+        'Files',
+        filenames)
+    return file
 
 # Set the app title
 st.title("Energy consumption")
@@ -39,14 +45,11 @@ if submit:
 st.header('Plot consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)
 with form_visual:
-    filenames = find_csv_filenames("/home/emeline/PycharmProjects/energy-consumption")
-    file = st.selectbox(
-        'Files',
-        filenames)
-    submit_see = st.form_submit_button(label="Show consumption plots")
+    file = load_file()
     option = st.selectbox(
         'Year',
         list_years)
+    submit_see = st.form_submit_button(label="Show consumption plots")
 
 if submit_see:
     dataset = Dataset(file)

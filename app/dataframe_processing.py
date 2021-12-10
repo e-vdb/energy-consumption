@@ -28,6 +28,12 @@ class Dataset():
         self.df[new_col] = self.df[col_index].diff()
         self.df['consumption_month'] = self.df['date'].apply(lambda x: x - relativedelta(months=1)).dt.month_name()
 
+    def evaluate_consumption(self):
+        for col in self.df.columns:
+            new_col = col + '_consumption'
+            self.df[new_col] = self.df[col].diff()
+        self.df['consumption_month'] = self.df['date'].apply(lambda x: x - relativedelta(months=1)).dt.month_name()
+
     def set_index_date(self):
         self.df.set_index('date', inplace=True)
 

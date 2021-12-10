@@ -25,6 +25,8 @@ st.write(
     "Save and visualise your energy consumption"
 )
 
+st.expander('Create a new record')
+
 st.header('Fill your index')
 form = st.form(key="my_form", clear_on_submit = True)
 with form:

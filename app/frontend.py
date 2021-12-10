@@ -8,12 +8,9 @@ from graphic import setup_bar_chart
 
 st.set_page_config(layout="wide")
 list_years = [(datetime.today() + relativedelta(years=-i)).year for i in range(5)]
-elec = Dataset('data_electric.csv')
-gas = Dataset('data_gas.csv')
-water = Dataset('data_water.csv')
-datasets = [elec, gas, water]
-for data in datasets:
-    data.load()
+dataCointe = Dataset('data_Cointe.csv')
+dataCointe.load()
+cols = list(dataCointe.df.columns)
 
 # Set the app title
 st.title("Energy consumption")
@@ -33,12 +30,9 @@ with form:
     submit = st.form_submit_button(label="Add")
 
 if submit:
-    df_elec = {'date': d, 'day_record': day_rec, 'night_record': night_rec}
-    elec.add(df_elec)
-    df_gas = {'date': d, 'record': rec_gas}
-    gas.add(df_gas)
-    df_water = {'date': d, 'record': rec_water}
-    water.add(df_water)
+    data = [d, day_rec, night_rec, rec_gas, rec_water]
+    newline = {col: val for col, val in zip(cols, data)}
+    dataCointe.add(newline)
 
 st.header('Plot consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)

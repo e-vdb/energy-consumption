@@ -10,7 +10,7 @@ st.set_page_config(layout="wide")
 list_years = [(datetime.today() + relativedelta(years=-i)).year for i in range(5)]
 dataCointe = Dataset('data_Cointe.csv')
 dataCointe.load()
-cols = list(dataCointe.df.columns)
+
 
 # Set the app title
 st.title("Energy consumption")

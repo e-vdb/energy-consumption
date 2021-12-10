@@ -17,6 +17,7 @@ st.title("Energy consumption")
 st.write(
     "Save and visualise your energy consumption"
 )
+
 st.header('Fill your index')
 form = st.form(key="my_form", clear_on_submit = True)
 with form:
@@ -51,5 +52,3 @@ if submit_see:
                 for col, new_col in zip(saved_cols, cols))
     for fig in figures:
         st.plotly_chart(fig, use_container_width=True)
-
-

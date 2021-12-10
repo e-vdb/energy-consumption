@@ -8,6 +8,7 @@ class Dataset():
 
     def load(self):
         self.df = pd.read_csv(self.filepath, parse_dates=['date'], date_parser=pd.to_datetime)
+        self.saved_columns = self.df.columns
 
     def fill(self, df2):
         self.df = self.df.append(df2, ignore_index=True)
@@ -29,8 +30,10 @@ class Dataset():
         self.df['consumption_month'] = self.df['date'].apply(lambda x: x - relativedelta(months=1)).dt.month_name()
 
     def evaluate_consumption(self):
+        self.consumption_columns = []
         for col in self.df.columns:
             new_col = col + '_consumption'
+            self.consumption_columns.append(new_col)
             self.df[new_col] = self.df[col].diff()
         self.df['consumption_month'] = self.df['date'].apply(lambda x: x - relativedelta(months=1)).dt.month_name()
 

@@ -12,3 +12,7 @@ Fields that can be saved:
 - [x] Create a new record
 - [x] Visualise consumption (for each year)
 - [x] Create a new file
+
+## Task list
+- [x] Create application
+- [ ] Deploy application

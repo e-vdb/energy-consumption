@@ -36,10 +36,13 @@ class Dataset():
             self.consumption_columns.append(new_col)
             self.df[new_col] = self.df[col].diff()
         self.df['consumption_month'] = self.df['date'].apply(lambda x: x - relativedelta(months=1)).dt.month_name()
+        self.df['consumption_year'] = self.df['date'].apply(lambda x: x - relativedelta(months=1)).dt.year
 
     def set_index_date(self):
         self.df.set_index('date', inplace=True)
 
     def filter_year(self, year):
         filt = (self.df['date'] >= year + '-02-01') & (self.df['date'] < str(int(year) + 1) + '-02-01')
-        self.df = self.df.loc[filt]
+        df_filter = self.df.loc[filt]
+        return df_filter
+

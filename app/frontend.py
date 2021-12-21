@@ -92,8 +92,10 @@ if submit_see:
     dataset.evaluate_consumption()
     saved_cols = list(dataset.saved_columns)[1:]
     cols = dataset.consumption_columns[1:]
-    dataset.filter_year(str(option))
-    figures = (setup_bar_chart(dataset.df, 'consumption_month', [new_col], col + str(option))
+    df_filter = dataset.filter_year(str(option))
+    figures = (setup_bar_chart(df_filter, 'consumption_month', [new_col], col + str(option))
                 for col, new_col in zip(saved_cols, cols))
     for fig in figures:
         st.plotly_chart(fig, use_container_width=True)
+    st.write('Total consumption')
+    st.write(dataset.df.groupby('consumption_year')[cols].sum())

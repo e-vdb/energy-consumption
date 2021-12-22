@@ -51,10 +51,10 @@ with expander:
 if submit_create:
     filepath = 'data_' + title + '.csv'
     if filepath in filenames:
-        st.write('This files already exists. Enter a new location.')
+        st.error('This files already exists. Enter a new location.')
     else:
         create_dataset(cols, title)
-        st.write('Your file has been successfully created.')
+        st.success('Your file has been successfully created.')
         filenames = load_file()
 
 

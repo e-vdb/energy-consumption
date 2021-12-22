@@ -86,8 +86,7 @@ with form_visual:
     if dataset.df.empty:
         st.warning('No data stored!')
     else:
-        years_nb = datetime.today().year - dataset.df['date'].dt.year.min()
-        list_years = [(datetime.today() + relativedelta(years=-i)).year for i in range(years_nb + 1)]
+        list_years = [i for i in range(dataset.df['date'].dt.year.min(), dataset.df['date'].dt.year.max())]
         option = st.selectbox(
             'Year',
             list_years)

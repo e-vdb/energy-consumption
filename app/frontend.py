@@ -12,8 +12,6 @@ def load_file():
     return find_csv_filenames("/home/emeline/PycharmProjects/energy-consumption")
 
 
-
-list_years = [(datetime.today() + relativedelta(years=-i)).year for i in range(5)]
 filenames = load_file()
 
 class App:
@@ -26,9 +24,7 @@ class App:
 
 # Set the app title
 st.title("Energy consumption")
-st.write(
-    "Save and visualise your energy consumption"
-)
+st.write("Save and visualise your energy consumption")
 
 expander = st.expander('Create a new record')
 with expander:
@@ -51,8 +47,8 @@ with expander:
         if water == 'Yes':
             cols.append('water')
         submit_create = st.form_submit_button(label="Create")
-if submit_create:
 
+if submit_create:
     filepath = 'data_' + title + '.csv'
     if filepath in filenames:
         st.write('This files already exists. Enter a new location.')
@@ -61,6 +57,8 @@ if submit_create:
         st.write('Your file has been successfully created.')
         filenames = load_file()
 
+
+st.header('Select your file')
 file = st.selectbox('Files', filenames)
 dataset = App(file).data
 
@@ -80,8 +78,11 @@ if submit:
     newline = {col: val for col, val in zip(cols, data)}
     dataset.add(newline)
 
+
 st.header('Plot consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)
+years_nb = datetime.today().year - dataset.df['date'].dt.year.min()
+list_years = [(datetime.today() + relativedelta(years=-i)).year for i in range(years_nb + 1)]
 with form_visual:
     option = st.selectbox(
         'Year',
@@ -89,6 +90,7 @@ with form_visual:
     submit_see = st.form_submit_button(label="Show consumption plots")
 
 if submit_see:
+    st.subheader(f"Consumption for year {option}")
     dataset.evaluate_consumption()
     saved_cols = list(dataset.saved_columns)[1:]
     cols = dataset.consumption_columns[1:]
@@ -97,5 +99,5 @@ if submit_see:
                 for col, new_col in zip(saved_cols, cols))
     for fig in figures:
         st.plotly_chart(fig, use_container_width=True)
-    st.write('Total consumption')
+    st.subheader('Total consumption')
     st.write(dataset.df.groupby('consumption_year')[cols].sum())

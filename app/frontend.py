@@ -26,7 +26,8 @@ class App:
 st.title("Energy consumption")
 st.write("Save and visualise your energy consumption")
 
-expander = st.expander('Create a new record')
+st.sidebar.header('Create a new file')
+expander = st.sidebar.expander('Select data to record')
 with expander:
     form_create = st.form(key="my_form_create", clear_on_submit=True)
     with form_create:
@@ -51,17 +52,16 @@ with expander:
 if submit_create:
     filepath = 'data_' + title + '.csv'
     if filepath in filenames:
-        st.error('This files already exists. Enter a new location.')
+        st.sidebar.error('This files already exists. Enter a new location.')
     else:
         create_dataset(cols, title)
-        st.success('Your file has been successfully created.')
+        st.sidebar.success('Your file has been successfully created.')
         filenames = load_file()
 
 
-st.header('Select your file')
-file = st.selectbox('Files', filenames)
+st.sidebar.header('Select your file')
+file = st.sidebar.selectbox('Files', filenames)
 dataset = App(file).data
-
 
 st.header('Fill your index')
 form = st.form(key="my_form", clear_on_submit = True)

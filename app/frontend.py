@@ -81,23 +81,30 @@ if submit:
 
 st.header('Plot consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)
-years_nb = datetime.today().year - dataset.df['date'].dt.year.min()
-list_years = [(datetime.today() + relativedelta(years=-i)).year for i in range(years_nb + 1)]
+
 with form_visual:
-    option = st.selectbox(
-        'Year',
-        list_years)
+    if dataset.df.empty:
+        st.warning('No data stored!')
+    else:
+        years_nb = datetime.today().year - dataset.df['date'].dt.year.min()
+        list_years = [(datetime.today() + relativedelta(years=-i)).year for i in range(years_nb + 1)]
+        option = st.selectbox(
+            'Year',
+            list_years)
     submit_see = st.form_submit_button(label="Show consumption plots")
 
 if submit_see:
-    st.subheader(f"Consumption for year {option}")
-    dataset.evaluate_consumption()
-    saved_cols = list(dataset.saved_columns)[1:]
-    cols = dataset.consumption_columns[1:]
-    df_filter = dataset.filter_year(str(option))
-    figures = (setup_bar_chart(df_filter, 'consumption_month', [new_col], col + str(option))
-                for col, new_col in zip(saved_cols, cols))
-    for fig in figures:
-        st.plotly_chart(fig, use_container_width=True)
-    st.subheader('Total consumption')
-    st.write(dataset.df.groupby('consumption_year')[cols].sum())
+    if dataset.df.empty:
+        st.warning('No data stored!')
+    else:
+        st.subheader(f"Consumption for year {option}")
+        dataset.evaluate_consumption()
+        saved_cols = list(dataset.saved_columns)[1:]
+        cols = dataset.consumption_columns[1:]
+        df_filter = dataset.filter_year(str(option))
+        figures = (setup_bar_chart(df_filter, 'consumption_month', [new_col], col + str(option))
+                    for col, new_col in zip(saved_cols, cols))
+        for fig in figures:
+            st.plotly_chart(fig, use_container_width=True)
+        st.subheader('Total consumption')
+        st.write(dataset.df.groupby('consumption_year')[cols].sum())

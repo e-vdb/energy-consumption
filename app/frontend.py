@@ -11,6 +11,11 @@ st.set_page_config(layout="wide")
 def load_file():
     return find_csv_filenames("/home/emeline/PycharmProjects/energy-consumption")
 
+dic_name = {'elec_consumption': 'Electricity consumption (kWh)',
+            'day_elec_consumption': 'Electricity day consumption (kWh)',
+            'night_elec_consumption': 'Electricity night consumption (kWh)',
+            'gas_consumption': 'Gas consumption (m3)',
+            'water_consumption': 'Water consumption (m3)'}
 
 filenames = load_file()
 
@@ -78,6 +83,16 @@ if submit:
     newline = {col: val for col, val in zip(cols, data)}
     dataset.add(newline)
 
+st.header('Total consumption')
+if dataset.df.empty:
+    st.warning('No data stored!')
+else:
+    dataset.evaluate_consumption()
+    cols = dataset.consumption_columns[1:]
+    tot_cons_per_year = dataset.df.groupby('consumption_year')[cols].sum()
+    tot_cons_per_year.rename(columns=dic_name, inplace=True)
+    st.write(tot_cons_per_year)
+
 
 st.header('Plot consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)
@@ -86,7 +101,7 @@ with form_visual:
     if dataset.df.empty:
         st.warning('No data stored!')
     else:
-        list_years = [i for i in range(dataset.df['date'].dt.year.min(), dataset.df['date'].dt.year.max())]
+        list_years = [i for i in range(dataset.df['date'].dt.year.min(), dataset.df['date'].dt.year.max() + 1)]
         option = st.selectbox(
             'Year',
             list_years)
@@ -97,13 +112,10 @@ if submit_see:
         st.warning('No data stored!')
     else:
         st.subheader(f"Consumption for year {option}")
-        dataset.evaluate_consumption()
         saved_cols = list(dataset.saved_columns)[1:]
-        cols = dataset.consumption_columns[1:]
         df_filter = dataset.filter_year(str(option))
         figures = (setup_bar_chart(df_filter, 'consumption_month', [new_col], col + str(option))
                     for col, new_col in zip(saved_cols, cols))
         for fig in figures:
             st.plotly_chart(fig, use_container_width=True)
-        st.subheader('Total consumption')
-        st.write(dataset.df.groupby('consumption_year')[cols].sum())
+

@@ -1,8 +1,6 @@
 import streamlit as st
 from dataframe_processing import Dataset
 import pandas as pd
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from graphic import setup_bar_chart
 from data_processing import find_csv_filenames, create_dataset
 st.set_page_config(layout="wide")

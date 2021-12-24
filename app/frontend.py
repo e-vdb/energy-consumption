@@ -89,6 +89,7 @@ if dataset.df.empty:
 else:
     dataset.evaluate_consumption()
     cols = dataset.consumption_columns[1:]
+    saved_cols = list(dataset.saved_columns)[1:]
     tot_cons_per_year = dataset.df.groupby('consumption_year')[cols].sum()
     tot_cons_per_year.rename(columns=dic_name, inplace=True)
     st.write(tot_cons_per_year)
@@ -119,3 +120,26 @@ if submit_see:
         for fig in figures:
             st.plotly_chart(fig, use_container_width=True)
 
+st.header('Compare consumption')
+form_comp = st.form(key="my_form_comp", clear_on_submit=True)
+with form_comp:
+    st.write('Select the year for which you want a comparison with previous years')
+    year1 = st.selectbox('Year', list_years[1:])
+    df_year = dataset.df.groupby('consumption_year')
+    saved_cols = list(dataset.saved_columns)
+    df1 = df_year.get_group(year1).drop([*saved_cols, 'date_consumption', 'consumption_year'], axis=1)
+    df1.set_index('consumption_month', inplace=True)
+    df1.rename(columns=dic_name, inplace=True)
+    print(df1)
+    submit_comp = st.form_submit_button(label="Compare consumption")
+
+if submit_comp:
+    index = list_years.index(year1)
+    for year2 in list_years[0:index]:
+        df2 = df_year.get_group(year2).drop([*saved_cols, 'date_consumption', 'consumption_year'], axis=1)
+        df2.set_index('consumption_month', inplace=True)
+        df2.rename(columns=dic_name, inplace=True)
+        st.subheader(f'Comparison between {year1} and {year2}')
+        diff = df1 - df2
+        diff = diff.dropna(axis=0)
+        st.dataframe(diff.style.background_gradient(axis=None, cmap='RdYlGn_r'))

@@ -9,8 +9,9 @@ Fields that can be saved:
 - Water
 
 ## Application functionalities
-- [x] Create a new record
+- [x] Fill your indexes
 - [x] Visualise consumption (for each year)
+- [x] Compare monthly consumption with previous years
 - [x] Create a new file
 
 ## Task list

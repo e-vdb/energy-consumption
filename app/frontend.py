@@ -128,7 +128,6 @@ with form_comp:
     df1 = df_year.get_group(year1).drop([*saved_cols, 'date_consumption', 'consumption_year'], axis=1)
     df1.set_index('consumption_month', inplace=True)
     df1.rename(columns=dic_name, inplace=True)
-    print(df1)
     submit_comp = st.form_submit_button(label="Compare consumption")
 
 if submit_comp:
@@ -138,6 +137,6 @@ if submit_comp:
         df2.set_index('consumption_month', inplace=True)
         df2.rename(columns=dic_name, inplace=True)
         st.subheader(f'Comparison between {year1} and {year2}')
-        diff = df1 - df2
-        diff = diff.dropna(axis=0)
-        st.dataframe(diff.style.background_gradient(axis=None, cmap='RdYlGn_r'))
+        diff = (df1 - df2).dropna(axis=0)
+
+        st.dataframe(diff.style.background_gradient(axis=0, cmap='RdYlGn_r'))

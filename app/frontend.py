@@ -80,10 +80,11 @@ if submit:
     data = [d] + data_input
     newline = {col: val for col, val in zip(cols, data)}
     dataset.add(newline)
+    st.success('Your entry has been added.')
 
 st.header('Total consumption')
 if dataset.df.empty:
-    st.warning('No data stored!')
+    st.warning('No data stored! Please fill first your index.')
 else:
     dataset.evaluate_consumption()
     cols = dataset.consumption_columns[1:]
@@ -98,7 +99,7 @@ form_visual = st.form(key="my_form_visual", clear_on_submit=True)
 
 with form_visual:
     if dataset.df.empty:
-        st.warning('No data stored!')
+        st.warning('No data stored! Please fill first your index.')
     else:
         list_years = [i for i in range(dataset.df['date'].dt.year.min(), dataset.df['date'].dt.year.max() + 1)]
         option = st.selectbox(
@@ -106,31 +107,31 @@ with form_visual:
             list_years)
     submit_see = st.form_submit_button(label="Show consumption plots")
 
-if submit_see:
-    if dataset.df.empty:
-        st.warning('No data stored!')
-    else:
-        st.subheader(f"Consumption for year {option}")
-        saved_cols = list(dataset.saved_columns)[1:]
-        df_filter = dataset.filter_year(str(option))
-        figures = (setup_bar_chart(df_filter, 'consumption_month', [new_col], col + str(option))
+if submit_see and not dataset.df.empty:
+    st.subheader(f"Consumption for year {option}")
+    saved_cols = list(dataset.saved_columns)[1:]
+    df_filter = dataset.filter_year(str(option))
+    figures = (setup_bar_chart(df_filter, 'consumption_month', [new_col], col + str(option))
                     for col, new_col in zip(saved_cols, cols))
-        for fig in figures:
-            st.plotly_chart(fig, use_container_width=True)
+    for fig in figures:
+        st.plotly_chart(fig, use_container_width=True)
 
 st.header('Compare consumption')
 form_comp = st.form(key="my_form_comp", clear_on_submit=True)
 with form_comp:
-    st.write('Select the year for which you want a comparison with previous years')
-    year1 = st.selectbox('Year', list_years[1:])
-    df_year = dataset.df.groupby('consumption_year')
-    saved_cols = list(dataset.saved_columns)
-    df1 = df_year.get_group(year1).drop([*saved_cols, 'date_consumption', 'consumption_year'], axis=1)
-    df1.set_index('consumption_month', inplace=True)
-    df1.rename(columns=dic_name, inplace=True)
+    if dataset.df.empty:
+        st.warning('No data stored! Please fill first your index.')
+    else:
+        st.write('Select the year for which you want a comparison with previous years')
+        year1 = st.selectbox('Year', list_years[1:])
+        df_year = dataset.df.groupby('consumption_year')
+        saved_cols = list(dataset.saved_columns)
+        df1 = df_year.get_group(year1).drop([*saved_cols, 'date_consumption', 'consumption_year'], axis=1)
+        df1.set_index('consumption_month', inplace=True)
+        df1.rename(columns=dic_name, inplace=True)
     submit_comp = st.form_submit_button(label="Compare consumption")
 
-if submit_comp:
+if submit_comp and not dataset.df.empty:
     index = list_years.index(year1)
     for year2 in list_years[0:index]:
         df2 = df_year.get_group(year2).drop([*saved_cols, 'date_consumption', 'consumption_year'], axis=1)
@@ -138,5 +139,4 @@ if submit_comp:
         df2.rename(columns=dic_name, inplace=True)
         st.subheader(f'Comparison between {year1} and {year2}')
         diff = (df1 - df2).dropna(axis=0)
-
         st.dataframe(diff.style.background_gradient(axis=0, cmap='RdYlGn_r'))

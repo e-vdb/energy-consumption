@@ -13,6 +13,7 @@ Fields that can be saved:
 - [x] Visualise consumption (for each year)
 - [x] Compare monthly consumption with previous years
 - [x] Create a new file
+- [ ] Export a report (pdf)
 
 ## Task list
 - [x] Create application

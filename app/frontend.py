@@ -1,7 +1,7 @@
 import streamlit as st
 from dataframe_processing import Dataset
 import pandas as pd
-from graphic import setup_bar_chart
+from graphic import setup_bar_chart, setup_bar_chart2
 from data_processing import find_csv_filenames, create_dataset
 st.set_page_config(layout="wide")
 
@@ -92,9 +92,13 @@ else:
     tot_cons_per_year = dataset.df.groupby('consumption_year')[cols].sum()
     tot_cons_per_year.rename(columns=dic_name, inplace=True)
     st.write(tot_cons_per_year)
+    figures = (setup_bar_chart2(tot_cons_per_year, col)
+               for col in tot_cons_per_year.columns)
+    for fig in figures:
+        st.plotly_chart(fig, use_container_width=True)
 
 
-st.header('Plot consumption')
+st.header('Monthly consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)
 
 with form_visual:

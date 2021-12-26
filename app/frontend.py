@@ -67,14 +67,16 @@ file = st.sidebar.selectbox('Files', filenames)
 dataset = App(file).data
 
 st.header('Fill your index')
-form = st.form(key="my_form", clear_on_submit = True)
-with form:
-    d = st.date_input(
-        "Date",
-        value=pd.to_datetime("2021-12-01", format="%Y-%m-%d"))
-    saved_cols = list(dataset.saved_columns)[1:]
-    data_input = [st.number_input(col) for col in saved_cols]
-    submit = st.form_submit_button(label="Add")
+expander_fill = st.expander('Open to fill your index')
+with expander_fill:
+    form = st.form(key="my_form", clear_on_submit=True)
+    with form:
+        d = st.date_input(
+            "Date",
+            value=pd.to_datetime("2021-12-01", format="%Y-%m-%d"))
+        saved_cols = list(dataset.saved_columns)[1:]
+        data_input = [st.number_input(col) for col in saved_cols]
+        submit = st.form_submit_button(label="Add")
 
 if submit:
     data = [d] + data_input

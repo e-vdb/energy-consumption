@@ -1,7 +1,7 @@
 import streamlit as st
 from dataframe_processing import Dataset
 import pandas as pd
-from graphic import setup_bar_chart, setup_bar_chart2
+from graphic import setup_bar_chart
 from data_processing import find_csv_filenames, create_dataset
 st.set_page_config(layout="wide")
 
@@ -24,6 +24,16 @@ class App:
     def fetch_data(self, filepath):
         self.data = Dataset(filepath)
         self.data.load()
+
+def plot_consumption(df, x, cols):
+    elec_col = [col for col in cols if 'elec' in col]
+    gas_water = [col for col in cols if 'elec' not in col]
+    figures_elec = setup_bar_chart(df, x, elec_col, 'Electricity consumption (kWh)')
+    figures_gas_water = [setup_bar_chart(df, x, [new_col], dic_name[new_col])
+               for new_col in gas_water]
+    figures = [figures_elec] + figures_gas_water
+    for fig in figures:
+        st.plotly_chart(fig, use_container_width=True)
 
 # Set the app title
 st.title("Energy consumption")
@@ -92,13 +102,13 @@ else:
     cols = dataset.consumption_columns[1:]
     saved_cols = list(dataset.saved_columns)[1:]
     tot_cons_per_year = dataset.df.groupby('consumption_year')[cols].sum()
-    tot_cons_per_year.rename(columns=dic_name, inplace=True)
-    st.write(tot_cons_per_year)
-    figures = (setup_bar_chart2(tot_cons_per_year, col)
-               for col in tot_cons_per_year.columns)
-    for fig in figures:
-        st.plotly_chart(fig, use_container_width=True)
 
+    tot_cons_per_year = tot_cons_per_year.reset_index()
+    plot_consumption(tot_cons_per_year, 'consumption_year', cols)
+
+    tot_cons_per_year.rename(columns=dic_name, inplace=True)
+    tot_cons_per_year.set_index('consumption_year', inplace=True)
+    st.write(tot_cons_per_year)
 
 st.header('Monthly consumption')
 form_visual = st.form(key="my_form_visual", clear_on_submit=True)
@@ -117,10 +127,8 @@ if submit_see and not dataset.df.empty:
     st.subheader(f"Consumption for year {option}")
     saved_cols = list(dataset.saved_columns)[1:]
     df_filter = dataset.filter_year(str(option))
-    figures = (setup_bar_chart(df_filter, 'consumption_month', [new_col], col + str(option))
-                    for col, new_col in zip(saved_cols, cols))
-    for fig in figures:
-        st.plotly_chart(fig, use_container_width=True)
+    plot_consumption(df_filter, 'consumption_month', cols)
+
 
 st.header('Compare consumption')
 form_comp = st.form(key="my_form_comp", clear_on_submit=True)

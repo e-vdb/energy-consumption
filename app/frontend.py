@@ -90,7 +90,7 @@ with expander_fill:
 
 if submit:
     data = [d] + data_input
-    newline = {col: val for col, val in zip(cols, data)}
+    newline = {col: val for col, val in zip(dataset.saved_columns, data)}
     dataset.add(newline)
     st.success('Your entry has been added.')
 

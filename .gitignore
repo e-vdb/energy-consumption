@@ -130,3 +130,6 @@ dmypy.json
 
 # csv files
 .csv
+
+# secrets
+secrets.toml
